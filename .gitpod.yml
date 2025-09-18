@@ -1,0 +1,11 @@
+# .gitpod.yml
+image: gitpod/workspace-docker
+
+tasks:
+  - name: Start App
+    init: docker-compose build
+    command: docker-compose up
+
+ports:
+  - port: 3000
+    onOpen: open-preview
