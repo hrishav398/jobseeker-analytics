@@ -6,8 +6,7 @@ import React from "react";
 import { Sankey, ResponsiveContainer, Tooltip } from "recharts";
 
 import JobApplicationsDashboard, { Application } from "@/components/JobApplicationsDashboard";
-import ResponseRateCard from "@/components/response_rate_card";
-import UniqueOpenRateChart from "@/components/response_rate_chart";
+import DashboardMetrics from "@/components/dashboard_metrics";
 import { checkAuth } from "@/utils/auth";
 
 interface SankeyData {
@@ -102,14 +101,10 @@ export default function Dashboard() {
 				!searchTerm ||
 				item.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
 				item.job_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-				item.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-				(item.normalized_job_title &&
-					item.normalized_job_title.toLowerCase().includes(searchTerm.toLowerCase()));
+				item.subject.toLowerCase().includes(searchTerm.toLowerCase());
 
 			const matchesStatus = !statusFilter || item.application_status === statusFilter;
 			const matchesCompany = !companyFilter || item.company_name === companyFilter;
-			const matchesNormalizedJobTitle =
-				!normalizedJobTitleFilter || item.normalized_job_title === normalizedJobTitleFilter;
 
 			const isNotRejection = !hideRejections || !item.application_status.toLowerCase().includes("reject");
 
@@ -121,7 +116,6 @@ export default function Dashboard() {
 				matchesSearch &&
 				matchesStatus &&
 				matchesCompany &&
-				matchesNormalizedJobTitle &&
 				isNotRejection &&
 				isNotApplicationConfirmation
 			);
@@ -131,7 +125,6 @@ export default function Dashboard() {
 		searchTerm,
 		statusFilter,
 		companyFilter,
-		normalizedJobTitleFilter,
 		hideRejections,
 		hideApplicationConfirmations
 	]);
@@ -281,17 +274,10 @@ export default function Dashboard() {
 		}
 	};
 
-	const responseRateContent = (
-		<>
-			<div className="flex flex-col gap-4 mt-4 mb-6 md:flex-row">
-				<div className="w-full md:w-[30%]">
-					<ResponseRateCard />
-				</div>
-				<div className="md:w-[70%]">
-					<UniqueOpenRateChart />
-				</div>
-			</div>
-		</>
+	const metricsContent = (
+		<div className="mt-4 mb-6">
+			<DashboardMetrics />
+		</div>
 	);
 
 	const sankeyChartContent =
@@ -446,7 +432,7 @@ export default function Dashboard() {
 			hideRejections={hideRejections}
 			loading={loading}
 			normalizedJobTitleFilter={normalizedJobTitleFilter}
-			responseRate={responseRateContent}
+			metrics={metricsContent}
 			sankeyChart={sankeyChartContent}
 			searchTerm={searchTerm}
 			statusFilter={statusFilter}
